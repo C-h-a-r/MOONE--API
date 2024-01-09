@@ -1,8 +1,8 @@
 {
-  "name": "moone-api",
+  "name": "moone",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "boot": "node ./API/server/boot.js"
@@ -12,6 +12,7 @@
   "dependencies": {
     "body-parser": "^1.20.2",
     "colors": "^1.4.0",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "surrealdb.node": "^0.3.0"
   }
 }

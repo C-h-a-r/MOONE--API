@@ -11,12 +11,6 @@ const apiKeyMiddleware = (req, res, next) => {
         " Request to " +
         colors.italic(req.originalUrl)
     );
-
-    if (apiKey === Key_File.DEV) {
-      req.isDevKey = true;
-    } else {
-      req.isDevKey = false;
-    }
     next();
   } else {
     res.status(401).json({ error: "Unauthorized: Invalid API key" });

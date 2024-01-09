@@ -1,0 +1,33 @@
+var db;
+
+async function main() {
+  const express = require("express");
+  const bodyParser = require("body-parser");
+  var colors = require("colors");
+
+  const Key_File = require("../config/keys");
+  const Keys = Object.values(Key_File);
+
+  // load db
+  const { loadDB } = require("./db");
+  //const db = loadDB("main", "root", Keys.MAIN); // TODO maybe some env var stuff to detect whether to load production vs testing
+  db = await loadDB("dev", "root", Keys.DEV);
+  console.log("db loaded");
+
+  const app = express();
+  const PORT = require("../config/port").PORT;
+
+  app.use(require("middleware/auth").apiKeyMiddleware);
+  app.use(bodyParser.json());
+
+  app.get("/protected", (req, res) => {
+    res.json({ message: "This is a protected resource" });
+  });
+
+  app.listen(PORT, () => {
+    console.log("---   MOONE API   ---".bold);
+    console.log(`Server is running on port ${PORT}`.bold);
+  });
+}
+
+main();
