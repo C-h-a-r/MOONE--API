@@ -17,18 +17,6 @@ async function loadDB(dbname, user, pass) {
     return db;
 }
 
-async function registerNewItem(steamid, cost, db) {
-    const item = await db.query(`
-        CREATE item CONTENT {
-            steamid: $steamid,
-            cost: $cost},
-            created_at: time::now(),
-        }
-    `, { steamid: steamid, cost: cost });
-
-    return item;
-}
-
 async function registerNewUser(steamid, db) {
     const user = await db.query(`
         CREATE user CONTENT {
@@ -41,10 +29,22 @@ async function registerNewUser(steamid, db) {
     return user;
 }
 
+async function deleteUser(userid, db) {
+    await db.query("DELETE user:$userid", { userid: userid });
+}
+
+async function giveCredits(userid, amount, db) {
+    await db.query("UPDATE user:$userid SET credits += $amount", { userid: userid, amount: amount });
+}
+
+async function takeCredits(userid, amount, db) {
+    await db.query("UPDATE user:$userid SET credits -= $amount", { userid: userid, amount: amount });
+}
+
 async function registerGame(playerids, bet, db) {
-    // TODO use transaction to make sure this doesnt cause people to lose credits
+    // TODO use transaction to make sure this doesnt cause people to lose credits. might be able to do this whole thing with one query.
     playerids.forEach(async userid => {
-        await db.query("UPDATE user:$userid SET credits -= $bet", { userid: userid, bet: bet });
+        await takeCredits(userid, bet, db);
     });
 
     let pot = bet * playerids.length;
@@ -62,7 +62,7 @@ async function registerGame(playerids, bet, db) {
 async function finishGame(gameid, winnerid, db) {
     const pot = await db.query("SELECT pot FROM game:$gameid", { gameid: gameid })[0].pot;
 
-    await db.query("UPDATE user:$userid SET credits += $pot", { userid: winnerid, pot: pot });
+    await giveCredits(winnerid, pot, db);
 
     await db.query("DELETE game:$gameid", { gameid: gameid });
 }
@@ -85,8 +85,10 @@ async function rollbackGames(db) { // probably only want to do this manually, ma
 
 module.exports = {
     loadDB,
-    registerNewItem,
     registerNewUser,
+    deleteUser,
+    giveCredits,
+    takeCredits,
     registerGame,
     finishGame,
     rollbackGames,
