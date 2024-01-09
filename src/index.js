@@ -10,8 +10,8 @@ async function main() {
 
   // load db
   const { loadDB } = require("./db");
-  //const db = loadDB("main", "root", Keys.MAIN); // TODO maybe some env var stuff to detect whether to load production vs testing
-  db = await loadDB("dev", "root", Keys.DEV);
+  //const db = loadDB("main", "moone", Keys.DB); // TODO maybe some env var stuff to detect whether to load production vs testing. also make password safer
+  db = await loadDB("dev", "moone", Keys.DB);
   console.log("db loaded");
 
   const app = express();
