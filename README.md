@@ -2,6 +2,20 @@
 
 All endpoints and info about the API.
 
+## Run Scripts
+
+##### Run The API
+
+`npm run api`
+
+##### Run The Bot
+
+`npm run bot`
+
+##### Run Everything
+
+`npm run boot`
+
 ## Endpoints
 
 #### IP Connect
@@ -27,18 +41,6 @@ All endpoints and info about the API.
 ```json
 {
   "message": "IP 1 removed from the HashSet"
-}
-```
-
-##### Request
-
-`GET /api/ip/get-ip-list`
-
-##### Response
-
-```json
-{
-  "ipList": ["1"]
 }
 ```
 

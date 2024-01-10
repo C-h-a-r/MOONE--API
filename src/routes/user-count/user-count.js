@@ -31,11 +31,6 @@ router.post("/remove-ip", (req, res) => {
   }
 });
 
-router.get("/get-ip-list", (req, res) => {
-  const ipList = Array.from(ipHashSet);
-  res.json({ ipList });
-});
-
 router.get("/get-ip-count", (req, res) => {
   const ipCount = ipHashSet.size;
   res.json({ ipCount });
