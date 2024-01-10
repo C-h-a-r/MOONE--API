@@ -106,6 +106,17 @@ async function registerTransaction(from, to, amount, db, notes = null) {
     return transaction;
 }
 
+async function getTransactions(userid, db, limit = 100) {
+    const transactions = await db.query(`
+        SELECT * FROM transaction 
+            WHERE sender = $userid || receiver = $userid 
+            ORDER BY created_at DESC
+            LIMIT $limit;
+        `, { userid: userid, limit: limit });
+
+    return transactions;
+}
+
 async function buyItem(userid, cost, name, db) {
     await takeCredits(userid, cost, db);
 
@@ -132,6 +143,7 @@ module.exports = {
     finishGame,
     rollbackGames,
     registerTransaction,
+    getTransactions,
     buyItem,
     sellItem,
 };
