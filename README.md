@@ -1,6 +1,5 @@
 # MOONE API
 
-All endpoints and info about the API.
 
 ## Run Scripts
 
