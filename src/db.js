@@ -41,7 +41,7 @@ async function takeCredits(userid, amount, db) {
     await db.query("UPDATE user:$userid SET credits -= $amount", { userid: userid, amount: amount });
 }
 
-async function registerGame(playerids, bet, db) {
+async function registerGame(playerids, bet, type, db) {
     // TODO use transaction to make sure this doesnt cause people to lose credits. might be able to do this whole thing with one query.
     playerids.forEach(async userid => {
         await takeCredits(userid, bet, db);
@@ -51,10 +51,11 @@ async function registerGame(playerids, bet, db) {
     const game = await db.query(`
         CREATE game CONTENT {
             pot: $pot,
+            type: $type,
             players: $playerids,
             created_at: time::now(),
         }
-    `, { pot: pot, playerids: playerids });
+    `, { pot: pot, type: type, playerids: playerids });
 
     return game;
 }
