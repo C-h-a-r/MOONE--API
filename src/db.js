@@ -70,7 +70,7 @@ async function finishGame(gameid, winnerid, db) {
     game.players.forEach(async playerid => {
         if(playerid == winnerid) return;
 
-        await registerTransaction(playerid, winnerid, bet);
+        await registerTransaction(playerid, winnerid, bet, "BET LOST");
     });
     
     await db.query("DELETE game:$gameid", { gameid: gameid });
@@ -92,15 +92,32 @@ async function rollbackGames(db) { // probably only want to do this manually, ma
     await db.delete("game");
 }
 
-async function registerTransaction(from, to, amount, db) {
+async function registerTransaction(from, to, amount, db, notes = null) {
     const transaction = await db.query(`
         CREATE transaction CONTENT {
             sender: $send,
             receiver: $recv,
             amount: $amount,
+            additional_info: $notes,
             created_at: time::now(),
         }
-    `, { send: from, recv: to, amount: amount});
+    `, { send: from, recv: to, amount: amount, notes: notes });
+
+    return transaction;
+}
+
+async function buyItem(userid, cost, name, db) {
+    await takeCredits(userid, cost, db);
+
+    const transaction = await registerTransaction(userid, null, cost, db, `BOUGHT ITEM: ${name}`);
+
+    return transaction;
+}
+
+async function sellItem(userid, cost, name, db) {
+    await giveCredits(userid, cost, db);
+
+    const transaction = await registerTransaction(null, userid, cost, db, `SOLD ITEM: ${name}`);
 
     return transaction;
 }
@@ -115,4 +132,6 @@ module.exports = {
     finishGame,
     rollbackGames,
     registerTransaction,
+    buyItem,
+    sellItem,
 };
