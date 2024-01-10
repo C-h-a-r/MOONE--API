@@ -1,12 +1,19 @@
 const SteamUser = require("steam-user");
-const config = require('../config/bot')
+const colors = require("colors");
+const config = require("../config/bot");
 const username = config.USERNAME;
 const password = config.PASSWORD;
 
 const client = new SteamUser();
 
 client.on("loggedOn", () => {
-  console.log("Logged into Steam as " + client.steamID.getSteam3RenderedID());
+  console.log(
+    colors.bold.gray("[BOT]") +
+      " Logged into Steam as " +
+      client.steamID.getSteam3RenderedID()
+  );
+
+  client.setPersona(SteamUser.EPersonaState.Online);
 });
 
 client.on("error", (err) => {
@@ -19,6 +26,9 @@ client.logOn({
 });
 
 client.on("disconnected", (eresult, msg) => {
-  console.log("Logged off from Steam:", SteamUser.EResult[eresult], msg);
-  process.exit();
+  console.log(
+    colors.bold.gray("[BOT]") + " Logged off from Steam:",
+    SteamUser.EResult[eresult],
+    msg
+  );
 });
