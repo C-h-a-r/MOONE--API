@@ -10,7 +10,7 @@ async function main() {
 
   // load db
   const { loadDB } = require("./db");
-  const db = loadDB("main", "moone", Keys.DB);
+  //const db = loadDB("main", "moone", Keys.DB);
   //module.exports = db; // TODO maybe some env var stuff to detect whether to load production vs testing. also make password safer
   console.log("db loaded");
 
@@ -22,6 +22,7 @@ async function main() {
 
   app.use("/api/ip", require("./routes/user-count/user-count"));
   app.use("/api/account", require("./routes/accounts/account-manage"));
+  app.use("/api/transaction", require("./routes/transactions/transactions"));
 
   app.listen(PORT, () => {
     console.log("---   MOONE API   ---".bold);

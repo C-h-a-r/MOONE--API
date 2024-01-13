@@ -1,6 +1,5 @@
 # MOONE API
 
-
 ## Run Scripts
 
 ##### Run The API
@@ -17,7 +16,7 @@
 
 ## Endpoints
 
-#### IP Connect
+### IP Connect
 
 ##### Request
 
@@ -53,4 +52,54 @@
 {
   "ipCount": 1
 }
+```
+
+### Account Managment
+
+##### Request
+
+`POST /api/account/create`
+
+##### Response
+
+```json
+{
+  "success": "user added to database"
+}
+```
+
+##### Request
+
+`DELETE /api/account/delete`
+
+##### Response
+
+```json
+{
+  "success": "user remove to database"
+}
+```
+
+### Transactions
+
+###### Request
+
+`POST /api/transaction/create`
+
+##### Response
+
+```json
+{
+  "success": "created transaction"
+}
+```
+
+###### Request
+
+`GET /api/transaction/fetch`
+
+##### Response
+
+```json
+idk yet
 ```
